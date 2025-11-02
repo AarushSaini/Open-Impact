@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPEN IMPACT - Government Spending & Impact Visualization Tool</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>OPEN IMPACT</h1>
+            <p>Visualizing how government spending translates into real-world neighborhood impact</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="dashboard">
+            <div class="sidebar">
+                <div class="search-box">
+                    <input type="text" id="search" placeholder="Search by ward, project, or department">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>Category Filters</h3>
+                    <div class="filter-options">
+                        <label><input type="checkbox" value="roads" checked> Road Maintenance</label>
+                        <label><input type="checkbox" value="parks" checked> Public Parks</label>
+                        <label><input type="checkbox" value="education" checked> Education</label>
+                        <label><input type="checkbox" value="healthcare" checked> Healthcare</label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>Status Filters</h3>
+                    <div class="filter-options">
+                        <label><input type="checkbox" value="completed" checked> Completed</label>
+                        <label><input type="checkbox" value="in-progress" checked> In Progress</label>
+                        <label><input type="checkbox" value="delayed" checked> Delayed</label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>Budget Range</h3>
+                    <div class="filter-options">
+                        <label>Min: <input type="number" id="min-budget" placeholder="0" min="0"></label>
+                        <label>Max: <input type="number" id="max-budget" placeholder="10000000" min="0"></label>
+                        <button id="apply-budget-filter">Apply</button>
+                    </div>
+                </div>
+                
+                <div class="summary-section">
+                    <h3>Spending Summary</h3>
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <h4>Total Budget</h4>
+                            <p class="amount">₹15 Cr</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Actual Spending</h4>
+                            <p class="amount">₹12.5 Cr</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="impact-legend">
+                    <h3>Impact Indicators</h3>
+                    <div class="legend-item">
+                        <span class="legend-color completed"></span>
+                        <span>Completed</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color in-progress"></span>
+                        <span>In Progress</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color delayed"></span>
+                        <span>Delayed</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="visualization">
+                <div id="map"></div>
+                
+                <div class="project-details" id="project-details">
+                    <h3>Project Details</h3>
+                    <p>Select a project on the map to view details</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Chatbot -->
+    <div id="chatbot-container" class="chatbot-container">
+        <div id="chatbot-button" class="chatbot-button">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div id="chatbot-window" class="chatbot-window">
+            <div class="chatbot-header">
+                <h4>Project Assistant</h4>
+                <button id="close-chatbot" class="close-btn">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">
+                    <p>Hello! I can help you find projects in your area. Just type your location (ward name or area) and I'll show you all relevant projects.</p>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Type your location (e.g., Ward 5, Central Delhi)...">
+                <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Government Spending & Impact Visualization Tool</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
