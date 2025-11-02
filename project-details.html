@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Analytics - Government Spending & Impact Visualization</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body class="powerbi-theme">
+    <header class="powerbi-header">
+        <div class="container">
+            <h1><i class="fas fa-chart-line"></i> Government Spending Analytics</h1>
+            <div class="header-actions">
+                <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                <div class="refresh-info">
+                    <i class="fas fa-sync-alt"></i> Last updated: <span id="last-updated">Today</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="powerbi-dashboard">
+            <!-- Top KPI Cards -->
+            <div class="kpi-cards">
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <div class="kpi-content">
+                        <h4>Total Budget</h4>
+                        <p class="kpi-value" id="detail-total-budget">Loading...</p>
+                        <p class="kpi-trend positive"><i class="fas fa-arrow-up"></i> 12% vs Last Year</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-coins"></i></div>
+                    <div class="kpi-content">
+                        <h4>Actual Spending</h4>
+                        <p class="kpi-value" id="detail-total-spending">Loading...</p>
+                        <p class="kpi-trend positive"><i class="fas fa-arrow-up"></i> 8% vs Last Year</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="kpi-content">
+                        <h4>Projects Count</h4>
+                        <p class="kpi-value" id="projects-count">Loading...</p>
+                        <p class="kpi-trend positive"><i class="fas fa-arrow-up"></i> 5 New Projects</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div class="kpi-content">
+                        <h4>Avg. Completion</h4>
+                        <p class="kpi-value" id="avg-completion">Loading...</p>
+                        <p class="kpi-trend negative"><i class="fas fa-arrow-down"></i> 3% vs Target</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Title and Status -->
+            <div class="project-title-section" id="project-title-section">
+                <h2>Project Details</h2>
+                <div class="project-status">Loading...</div>
+            </div>
+
+            <!-- Main Dashboard Content -->
+            <div class="dashboard-grid">
+                <!-- Project Overview Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-info-circle"></i> Project Overview</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content" id="project-overview">
+                        Loading project details...
+                    </div>
+                </div>
+
+                <!-- Budget vs Actual Chart -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar"></i> Budget vs Actual</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content chart-container">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Timeline Progress -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calendar-alt"></i> Project Timeline</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="timeline-container" id="timeline-container">
+                            Loading timeline...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion Trend -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-line"></i> Completion Trend</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content chart-container">
+                        <canvas id="completionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Impact Assessment -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bullseye"></i> Impact Assessment</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="impact-gauge-container">
+                            <canvas id="impactGauge"></canvas>
+                            <div class="gauge-label" id="impact-score-label">Impact Score</div>
+                        </div>
+                        <div class="impact-factors" id="impact-factors">
+                            Loading impact factors...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Description -->
+                <div class="dashboard-card full-width">
+                    <div class="card-header">
+                        <h3><i class="fas fa-file-alt"></i> Project Description</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content" id="project-description">
+                        Loading project description...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="powerbi-footer">
+        <div class="container">
+            <p>&copy; 2023 Government Spending & Impact Visualization Tool | <i class="fas fa-chart-pie"></i> Powered by Analytics</p>
+        </div>
+    </footer>
+
+    <script>
+        // Define sample data in case the external data fails to load
+        const sampleData = {
+            roadProjects: [{
+                id: "road-001",
+                name: "Delhi-Mumbai Expressway Phase 1",
+                budget: 1000000000000,
+                actualSpending: 500000000000,
+                location: { lat: 28.4595, lng: 77.0266 },
+                ward: "Gurgaon-Delhi",
+                department: "National Highways Authority of India (NHAI)",
+                status: "in-progress",
+                completionPercentage: 50,
+                startDate: "2019-03-09",
+                endDate: "2025-12-31",
+                description: "1,350 km eight-lane expressway connecting Delhi and Mumbai, reducing travel time from 24 to 12 hours. Part of Bharatmala Pariyojana.",
+                impactScore: 0.85
+            }]
+        };
+        
+        // Ensure governmentSpendingTotals exists
+        if (!window.governmentSpendingTotals) {
+            window.governmentSpendingTotals = {
+                totalBudget: 1250000000,
+                totalSpending: 875000000
+            };
+        }
+    </script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Load project details when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // If data.js failed to load, use sample data
+            if (typeof governmentSpendingData === 'undefined') {
+                console.warn('Using sample data because data.js failed to load');
+                window.governmentSpendingData = sampleData;
+            }
+            
+            // Get project ID and category from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+            const category = urlParams.get('category');
+            
+            let project;
+            
+            // Find the project in the data
+            if (projectId && category && governmentSpendingData) {
+                switch(category) {
+                    case 'roads':
+                        project = governmentSpendingData.roadProjects.find(p => p.id === projectId);
+                        break;
+                    case 'parks':
+                        project = governmentSpendingData.parkProjects.find(p => p.id === projectId);
+                        break;
+                    case 'education':
+                        project = governmentSpendingData.educationProjects.find(p => p.id === projectId);
+                        break;
+                    case 'healthcare':
+                        project = governmentSpendingData.healthcareProjects.find(p => p.id === projectId);
+                        break;
+                }
+            }
+            
+            // If no project found, use the first road project as a fallback
+            if (!project && governmentSpendingData.roadProjects && governmentSpendingData.roadProjects.length > 0) {
+                project = governmentSpendingData.roadProjects[0];
+                console.log('Using fallback project:', project.name);
+            } else if (!project) {
+                project = sampleData.roadProjects[0];
+                console.log('Using sample project:', project.name);
+            }
+            
+            // Display project details
+            displayProjectDetails(project, category || 'roads');
+            
+            // Create charts and visualizations
+            createBudgetChart(project);
+            createCompletionChart(project);
+            createImpactGauge(project);
+            
+            // Update KPI cards with project-specific values
+            
+            // Update budget and spending to match the specific project being viewed
+            document.getElementById('detail-total-budget').textContent = formatCurrency(project.budget);
+            document.getElementById('detail-total-spending').textContent = formatCurrency(project.actualSpending);
+            
+            // Count all projects from the map data (all categories combined)
+            let totalProjects = 0;
+            if (governmentSpendingData) {
+                totalProjects = (governmentSpendingData.roadProjects ? governmentSpendingData.roadProjects.length : 0) +
+                               (governmentSpendingData.parkProjects ? governmentSpendingData.parkProjects.length : 0) +
+                               (governmentSpendingData.educationProjects ? governmentSpendingData.educationProjects.length : 0) +
+                               (governmentSpendingData.healthcareProjects ? governmentSpendingData.healthcareProjects.length : 0);
+            } else {
+                totalProjects = 28; // Fallback: 7 road + 7 park + 7 education + 7 healthcare projects
+            }
+            document.getElementById('projects-count').textContent = totalProjects;
+            
+            // Calculate average completion percentage from all projects
+            let avgCompletion = 0;
+            let totalCompletionSum = 0;
+            let projectCount = 0;
+            
+            if (governmentSpendingData) {
+                // Sum completion percentages from all project categories
+                if (governmentSpendingData.roadProjects) {
+                    governmentSpendingData.roadProjects.forEach(proj => {
+                        totalCompletionSum += proj.completionPercentage;
+                        projectCount++;
+                    });
+                }
+                if (governmentSpendingData.parkProjects) {
+                    governmentSpendingData.parkProjects.forEach(proj => {
+                        totalCompletionSum += proj.completionPercentage;
+                        projectCount++;
+                    });
+                }
+                if (governmentSpendingData.educationProjects) {
+                    governmentSpendingData.educationProjects.forEach(proj => {
+                        totalCompletionSum += proj.completionPercentage;
+                        projectCount++;
+                    });
+                }
+                if (governmentSpendingData.healthcareProjects) {
+                    governmentSpendingData.healthcareProjects.forEach(proj => {
+                        totalCompletionSum += proj.completionPercentage;
+                        projectCount++;
+                    });
+                }
+                
+                if (projectCount > 0) {
+                    avgCompletion = Math.round(totalCompletionSum / projectCount);
+                }
+            } else {
+                avgCompletion = 68; // Fallback value
+            }
+            document.getElementById('avg-completion').textContent = ${avgCompletion}%;
+        });
+        
+        function loadProjectDetails() {
+            // Calculate total budget and spending for all projects
+            updateSummaryStats();
+            
+            // Get project ID and category from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+            const category = urlParams.get('category');
+            
+            let project;
+            
+            if (!projectId || !category) {
+                // Use a sample project if no parameters are provided
+                project = governmentSpendingData.roadProjects[0];
+                displayProjectDetails(project, 'roads');
+                createBudgetChart(project);
+                createCompletionChart(project);
+                createImpactGauge(project);
+                updateKPICards();
+                return;
+            }
+            
+            // Find the project in the data
+            switch(category) {
+                case 'roads':
+                    project = governmentSpendingData.roadProjects.find(p => p.id === projectId);
+                    break;
+                case 'parks':
+                    project = governmentSpendingData.parkProjects.find(p => p.id === projectId);
+                    break;
+                case 'education':
+                    project = governmentSpendingData.educationProjects.find(p => p.id === projectId);
+                    break;
+                case 'healthcare':
+                    project = governmentSpendingData.healthcareProjects.find(p => p.id === projectId);
+                    break;
+                default:
+                    showError('Invalid project category');
+                    return;
+            }
+            
+            if (!project) {
+                showError('Project not found');
+                return;
+            }
+            
+            // Display project details
+            displayProjectDetails(project, category);
+            
+            // Create charts and visualizations
+            createBudgetChart(project);
+            createCompletionChart(project);
+            createImpactGauge(project);
+            
+            // Update KPI cards with project-specific values
+            updateSummaryStats();
+            
+            // Update budget and spending to match the specific project being viewed
+            document.getElementById('detail-total-budget').textContent = formatCurrency(project.budget);
+            document.getElementById('detail-total-spending').textContent = formatCurrency(project.actualSpending);
+            
+            // Set project count and average completion with actual values
+            document.getElementById('projects-count').textContent = '1'; // This specific project
+            document.getElementById('avg-completion').textContent = project.completionPercentage + '%'; // Use this project's completion
+        }
+        
+        function displayProjectDetails(project, category) {
+            // Update the summary totals
+            document.getElementById('detail-total-budget').textContent = formatCurrency(window.governmentSpendingTotals.totalBudget);
+            document.getElementById('detail-total-spending').textContent = formatCurrency(window.governmentSpendingTotals.totalSpending);
+            
+            // Update project title section
+            const projectTitleSection = document.getElementById('project-title-section');
+            projectTitleSection.innerHTML = `
+                <h2>${project.name}</h2>
+                <div class="project-status ${project.status}">${capitalizeFirstLetter(project.status)}</div>
+            `;
+            
+            // Format dates
+            const startDate = new Date(project.startDate).toLocaleDateString();
+            const endDate = new Date(project.endDate).toLocaleDateString();
+            
+            // Update project overview
+            const projectOverview = document.getElementById('project-overview');
+            projectOverview.innerHTML = `
+                <div class="overview-grid">
+                    <div class="overview-item">
+                        <div class="overview-label">Ward</div>
+                        <div class="overview-value">${project.ward}</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Department</div>
+                        <div class="overview-value">${project.department}</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Start Date</div>
+                        <div class="overview-value">${startDate}</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">End Date</div>
+                        <div class="overview-value">${endDate}</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Budget</div>
+                        <div class="overview-value">${formatCurrency(project.budget)}</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Actual Spending</div>
+                        <div class="overview-value">${formatCurrency(project.actualSpending)}</div>
+                    </div>
+                </div>
+                <div class="completion-container">
+                    <div class="completion-label">Completion: ${project.completionPercentage}%</div>
+                    <div class="completion-bar">
+                        <div class="completion-fill ${project.status}" style="width: ${project.completionPercentage}%"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Update project description with enhanced details
+            document.getElementById('project-description').innerHTML = `
+                <p>${project.description}</p>
+                <div class="additional-details">
+                    <h4>Project Benefits</h4>
+                    <ul>
+                        <li>Economic Impact: This project is expected to generate significant economic benefits for the local community.</li>
+                        <li>Environmental Considerations: The project incorporates sustainable practices and environmental safeguards.</li>
+                        <li>Community Engagement: Local stakeholders have been consulted throughout the planning and implementation phases.</li>
+                    </ul>
+                    <h4>Implementation Timeline</h4>
+                    <p>The project is being implemented in phases, with regular monitoring and evaluation to ensure quality and timely delivery.</p>
+                    <h4>Funding Sources</h4>
+                    <p>This project is funded through a combination of government allocations, public-private partnerships, and specialized infrastructure development funds.</p>
+                </div>
+            `;
+            
+            // Update timeline
+            const timelineContainer = document.getElementById('timeline-container');
+            
+            // Calculate project duration in days
+            const startDateObj = new Date(project.startDate);
+            const endDateObj = new Date(project.endDate);
+            const projectDuration = Math.ceil((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
+            
+            // Calculate days elapsed
+            const today = new Date();
+            const daysElapsed = Math.min(
+                Math.ceil((today - startDateObj) / (1000 * 60 * 60 * 24)),
+                projectDuration
+            );
+            
+            // Calculate expected progress based on time elapsed
+            const expectedProgress = Math.min(Math.round((daysElapsed / projectDuration) * 100), 100);
+            
+            timelineContainer.innerHTML = `
+                <div class="timeline-stats">
+                    <div class="timeline-stat">
+                        <div class="stat-value">${projectDuration} days</div>
+                        <div class="stat-label">Total Duration</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="stat-value">${daysElapsed} days</div>
+                        <div class="stat-label">Elapsed</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="stat-value">${Math.max(projectDuration - daysElapsed, 0)} days</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                </div>
+                <div class="timeline-progress">
+                    <div class="timeline-label">Time Progress: ${expectedProgress}%</div>
+                    <div class="timeline-bar">
+                        <div class="timeline-fill" style="width: ${expectedProgress}%"></div>
+                    </div>
+                </div>
+                <div class="timeline-comparison">
+                    <div class="comparison-item">
+                        <div class="comparison-label">Time Progress</div>
+                        <div class="comparison-value">${expectedProgress}%</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Work Completion</div>
+                        <div class="comparison-value">${project.completionPercentage}%</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Variance</div>
+                        <div class="comparison-value ${project.completionPercentage >= expectedProgress ? 'positive' : 'negative'}">
+                            ${project.completionPercentage >= expectedProgress ? '+' : ''}${(project.completionPercentage - expectedProgress).toFixed(1)}%
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Update impact factors
+            const impactFactors = document.getElementById('impact-factors');
+            
+            // Calculate impact score class
+            const impactScore = parseFloat(project.impactScore);
+            let impactClass = 'low';
+            if (impactScore >= 0.8) {
+                impactClass = 'high';
+            } else if (impactScore >= 0.5) {
+                impactClass = 'medium';
+            }
+            
+            // Calculate spending efficiency (actual/budget ratio)
+            const spendingEfficiency = (project.actualSpending / project.budget) * 100;
+            
+            impactFactors.innerHTML = `
+                <div class="impact-factor">
+                    <div class="factor-label">Spending Efficiency</div>
+                    <div class="factor-bar">
+                        <div class="factor-fill ${spendingEfficiency <= 100 ? 'positive' : 'negative'}" 
+                             style="width: ${Math.min(spendingEfficiency, 100)}%"></div>
+                    </div>
+                    <div class="factor-value">${spendingEfficiency.toFixed(1)}%</div>
+                </div>
+                <div class="impact-factor">
+                    <div class="factor-label">Completion Rate</div>
+                    <div class="factor-bar">
+                        <div class="factor-fill ${project.completionPercentage >= expectedProgress ? 'positive' : 'negative'}" 
+                             style="width: ${project.completionPercentage}%"></div>
+                    </div>
+                    <div class="factor-value">${project.completionPercentage}%</div>
+                </div>
+                <div class="impact-factor">
+                    <div class="factor-label">Overall Impact</div>
+                    <div class="factor-bar">
+                        <div class="factor-fill ${impactClass}" 
+                             style="width: ${impactScore * 100}%"></div>
+                    </div>
+                    <div class="factor-value">${impactScore}</div>
+                </div>
+            `;
+        }
+        
+        function createBudgetChart(project) {
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            
+            // Ensure budget and actualSpending exist
+            const budget = project.budget || 100000000;
+            const actualSpending = project.actualSpending || 75000000;
+            
+            // Calculate budget utilization
+            const utilized = actualSpending;
+            const remaining = Math.max(budget - actualSpending, 0);
+            const overBudget = actualSpending > budget ? actualSpending - budget : 0;
+            
+            // Create bar chart
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Budget Allocation'],
+                    datasets: [
+                        {
+                            label: 'Budget',
+                            data: [budget],
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Actual Spending',
+                            data: [actualSpending],
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Amount (₹)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Budget vs Actual Spending'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Create a doughnut chart for budget breakdown
+            const breakdownCtx = document.createElement('canvas');
+            breakdownCtx.id = 'budgetBreakdown';
+            document.querySelector('.dashboard-card:nth-child(2) .card-content').appendChild(breakdownCtx);
+            
+            // Create doughnut chart
+            new Chart(breakdownCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Utilized', 'Remaining', overBudget > 0 ? 'Over Budget' : ''],
+                    datasets: [{
+                        data: [utilized, remaining, overBudget],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 99, 132, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Budget Breakdown'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = formatCurrency(context.raw);
+                                    const percentage = Math.round((context.raw / budget) * 100);
+                                    return label + ': ' + value + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createCompletionChart(project) {
+            const ctx = document.getElementById('completionChart').getContext('2d');
+            
+            // Ensure dates and completion percentage exist
+            const startDate = project.startDate ? new Date(project.startDate) : new Date(2023, 0, 1);
+            const endDate = project.endDate ? new Date(project.endDate) : new Date(2023, 11, 31);
+            const completionPercentage = project.completionPercentage || 65;
+            const today = new Date();
+            
+            // Generate sample data for the chart
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const completionData = [10, 20, 30, 40, 50, completionPercentage, null, null, null, null, null, null];
+            const projectedData = [null, null, null, null, null, completionPercentage, 70, 80, 90, 95, 98, 100];
+            
+            // Create the completion chart
+            const completionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Actual Completion',
+                            data: completionData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Projected Completion',
+                            data: projectedData,
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Target (100%)',
+                            data: Array(months.length).fill(100),
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderDash: [3, 3],
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Completion (%)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Project Completion Trend'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createImpactGauge(project) {
+            const ctx = document.getElementById('impactGauge').getContext('2d');
+            
+            // Calculate impact score class (default to 0.75 if not available)
+            const impactScore = project.impactScore ? parseFloat(project.impactScore) : 0.75;
+            
+            // Create gauge chart
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Impact', 'Remaining'],
+                    datasets: [{
+                        data: [impactScore, 1 - impactScore],
+                        backgroundColor: [
+                            getImpactColor(impactScore),
+                            'rgba(200, 200, 200, 0.2)'
+                        ],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        tooltip: {
+                            enabled: false
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Add gauge value in center
+            const gaugeLabel = document.getElementById('impact-score-label');
+            gaugeLabel.innerHTML = `
+                <div class="gauge-value">${impactScore.toFixed(2)}</div>
+                <div class="gauge-text">Impact Score</div>
+            `;
+        }
+        
+        function getImpactColor(score) {
+            if (score >= 0.8) {
+                return 'rgba(75, 192, 192, 0.8)'; // High - Green
+            } else if (score >= 0.5) {
+                return 'rgba(255, 205, 86, 0.8)'; // Medium - Yellow
+            } else {
+                return 'rgba(255, 99, 132, 0.8)'; // Low - Red
+            }
+        }
+        
+        function updateKPICards() {
+            // Calculate total projects count
+            const totalProjects = 
+                governmentSpendingData.roadProjects.length + 
+                governmentSpendingData.parkProjects.length + 
+                governmentSpendingData.educationProjects.length + 
+                governmentSpendingData.healthcareProjects.length;
+            
+            document.getElementById('projects-count').textContent = totalProjects;
+            
+            // Calculate average completion percentage
+            let totalCompletion = 0;
+            let projectCount = 0;
+            
+            // Add road projects
+            governmentSpendingData.roadProjects.forEach(project => {
+                totalCompletion += project.completionPercentage;
+                projectCount++;
+            });
+            
+            // Add park projects
+            governmentSpendingData.parkProjects.forEach(project => {
+                totalCompletion += project.completionPercentage;
+                projectCount++;
+            });
+            
+            // Add education projects
+            governmentSpendingData.educationProjects.forEach(project => {
+                totalCompletion += project.completionPercentage;
+                projectCount++;
+            });
+            
+            // Add healthcare projects
+            governmentSpendingData.healthcareProjects.forEach(project => {
+                totalCompletion += project.completionPercentage;
+                projectCount++;
+            });
+            
+            const avgCompletion = (totalCompletion / projectCount).toFixed(1);
+            document.getElementById('avg-completion').textContent = avgCompletion + '%';
+        }
+        
+        function showError(message) {
+            const dashboardGrid = document.querySelector('.dashboard-grid');
+            dashboardGrid.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>${message}</p>
+                    <a href="index.html" class="btn-primary">Return to Dashboard</a>
+                </div>
+            `;
+        }
+        
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        
+        function formatCurrency(amount) {
+            // Check if amount is in crores or lakhs
+            if (amount >= 10000000) {
+                return '₹' + (amount / 10000000).toFixed(2) + ' Cr';
+            } else if (amount >= 100000) {
+                return '₹' + (amount / 100000).toFixed(2) + ' Lakh';
+            } else {
+                return '₹' + amount.toLocaleString('en-IN');
+            }
+        }
+    </script>
+</body>
+</html>
