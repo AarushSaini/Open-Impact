@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power BI Dashboard Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        /* Inline styles to ensure everything works without a server */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f6fa;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="powerbi-theme">
+    <!-- Power BI Header -->
+    <header class="powerbi-header">
+        <div class="container">
+            <h1><i class="fas fa-chart-line"></i> Government Project Dashboard</h1>
+            <div class="header-actions">
+                <a href="#" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Map</a>
+                <span class="refresh-info"><i class="fas fa-sync"></i> Last updated: Today</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="powerbi-dashboard">
+        <div class="container">
+            <!-- KPI Cards -->
+            <div class="kpi-cards">
+                <div class="kpi-card">
+                    <div class="kpi-icon">$</div>
+                    <div class="kpi-content">
+                        <h4>Total Budget</h4>
+                        <div class="kpi-value">$12,500,000</div>
+                        <div class="kpi-trend positive"><i class="fas fa-arrow-up"></i> 12% vs last year</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">$</div>
+                    <div class="kpi-content">
+                        <h4>Actual Spending</h4>
+                        <div class="kpi-value">$8,750,000</div>
+                        <div class="kpi-trend positive"><i class="fas fa-arrow-down"></i> 5% under budget</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">#</div>
+                    <div class="kpi-content">
+                        <h4>Project Count</h4>
+                        <div class="kpi-value">16</div>
+                        <div class="kpi-trend positive"><i class="fas fa-arrow-up"></i> 4 new this quarter</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">%</div>
+                    <div class="kpi-content">
+                        <h4>Avg. Completion</h4>
+                        <div class="kpi-value">68%</div>
+                        <div class="kpi-trend positive"><i class="fas fa-arrow-up"></i> 15% increase</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Title -->
+            <div class="project-title-section">
+                <h2>Highway 101 Expansion Project</h2>
+                <div class="project-status in-progress">In Progress</div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Project Overview -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-info-circle"></i> Project Overview</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="overview-grid">
+                            <div class="overview-item">
+                                <div class="overview-label">Start Date</div>
+                                <div class="overview-value">Jan 15, 2023</div>
+                            </div>
+                            <div class="overview-item">
+                                <div class="overview-label">End Date</div>
+                                <div class="overview-value">Dec 30, 2024</div>
+                            </div>
+                            <div class="overview-item">
+                                <div class="overview-label">Duration</div>
+                                <div class="overview-value">24 months</div>
+                            </div>
+                            <div class="overview-item">
+                                <div class="overview-label">Department</div>
+                                <div class="overview-value">Transportation</div>
+                            </div>
+                            <div class="overview-item">
+                                <div class="overview-label">Project Manager</div>
+                                <div class="overview-value">Sarah Johnson</div>
+                            </div>
+                            <div class="overview-item">
+                                <div class="overview-label">Priority</div>
+                                <div class="overview-value">High</div>
+                            </div>
+                        </div>
+                        <div class="completion-container">
+                            <div class="completion-label">Completion: 65%</div>
+                            <div class="completion-bar">
+                                <div class="completion-fill in-progress" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget vs Actual -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-dollar-sign"></i> Budget vs Actual</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container">
+                            <canvas id="budgetChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Progress -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calendar-alt"></i> Timeline Progress</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="timeline-stats">
+                            <div class="timeline-stat">
+                                <div class="stat-value">65%</div>
+                                <div class="stat-label">Time Elapsed</div>
+                            </div>
+                            <div class="timeline-stat">
+                                <div class="stat-value">65%</div>
+                                <div class="stat-label">Work Completed</div>
+                            </div>
+                            <div class="timeline-stat">
+                                <div class="stat-value">On Track</div>
+                                <div class="stat-label">Status</div>
+                            </div>
+                        </div>
+                        <div class="timeline-progress">
+                            <div class="timeline-label">Project Timeline</div>
+                            <div class="timeline-bar">
+                                <div class="timeline-fill" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div class="timeline-comparison">
+                            <div class="comparison-item">
+                                <div class="comparison-label">Planned Progress</div>
+                                <div class="comparison-value">60%</div>
+                            </div>
+                            <div class="comparison-item">
+                                <div class="comparison-label">Actual Progress</div>
+                                <div class="comparison-value positive">65%</div>
+                            </div>
+                            <div class="comparison-item">
+                                <div class="comparison-label">Variance</div>
+                                <div class="comparison-value positive">+5%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion Trend -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-line"></i> Completion Trend</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container">
+                            <canvas id="completionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Impact Assessment -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-pie"></i> Impact Assessment</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="impact-gauge-container">
+                            <canvas id="impactGauge"></canvas>
+                            <div class="gauge-label">
+                                <div class="gauge-value">8.5</div>
+                                <div class="gauge-text">Impact Score</div>
+                            </div>
+                        </div>
+                        <div class="impact-factors">
+                            <div class="impact-factor">
+                                <div class="factor-label">
+                                    <span>Economic Impact</span>
+                                    <span>9.2</span>
+                                </div>
+                                <div class="factor-bar">
+                                    <div class="factor-fill high" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            <div class="impact-factor">
+                                <div class="factor-label">
+                                    <span>Social Impact</span>
+                                    <span>8.0</span>
+                                </div>
+                                <div class="factor-bar">
+                                    <div class="factor-fill high" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="impact-factor">
+                                <div class="factor-label">
+                                    <span>Environmental Impact</span>
+                                    <span>6.5</span>
+                                </div>
+                                <div class="factor-bar">
+                                    <div class="factor-fill medium" style="width: 65%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Description -->
+                <div class="dashboard-card full-width">
+                    <div class="card-header">
+                        <h3><i class="fas fa-file-alt"></i> Project Description</h3>
+                        <div class="card-actions">
+                            <button class="btn-card-action"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div id="project-description">
+                            <p>The Highway 101 Expansion Project aims to reduce traffic congestion and improve safety along a critical transportation corridor. The project includes adding new lanes, improving interchanges, and implementing smart traffic management systems. This expansion will accommodate growing traffic volumes and enhance regional connectivity.</p>
+                            <p>Key benefits include reduced travel times, decreased accident rates, and improved economic activity through better goods movement. The project also incorporates sustainable design elements such as LED lighting, stormwater management systems, and native landscaping.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Power BI Footer -->
+    <footer class="powerbi-footer">
+        <div class="container">
+            <p>Government Spending Visualization <i class="fas fa-chart-bar"></i> Powered by Power BI Dashboard</p>
+        </div>
+    </footer>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- Chart.js Implementation -->
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Budget Chart
+            const budgetCtx = document.getElementById('budgetChart').getContext('2d');
+            const budgetChart = new Chart(budgetCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [
+                    {
+                        label: 'Budget',
+                        data: [3000000, 3500000, 3000000, 3000000],
+                        backgroundColor: 'rgba(52, 152, 219, 0.5)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Actual',
+                        data: [2800000, 3200000, 2750000, 0],
+                        backgroundColor: 'rgba(46, 204, 113, 0.5)',
+                        borderColor: 'rgba(46, 204, 113, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value / 1000000 + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+            });
+
+            // Completion Chart
+            const completionCtx = document.getElementById('completionChart').getContext('2d');
+            const completionChart = new Chart(completionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    datasets: [
+                        {
+                            label: 'Planned',
+                            data: [5, 15, 20, 30, 40, 45, 50, 55, 60],
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Actual',
+                            data: [5, 10, 18, 32, 45, 50, 58, 62, 65],
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Impact Gauge
+            const impactCtx = document.getElementById('impactGauge').getContext('2d');
+            const impactGauge = new Chart(impactCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Impact Score', 'Remaining'],
+                    datasets: [{
+                        data: [8.5, 1.5],
+                        backgroundColor: [
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(236, 240, 241, 1)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '80%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
